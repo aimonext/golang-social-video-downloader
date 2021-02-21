@@ -9,8 +9,15 @@ VERSION=1.0.0
 build:
 	@echo "Building $(APP_NAME)..."
 	@mkdir -p $(BUILD_DIR)
-	go build -o $(BUILD_DIR)/$(APP_NAME) ./cmd/main.go
+	CGO_ENABLED=0 GOOS=$(shell go env GOOS) GOARCH=$(shell go env GOARCH) go build -ldflags="-s -w" -o $(BUILD_DIR)/$(APP_NAME) ./cmd/main.go
 	@echo "Build complete! Executable created in $(BUILD_DIR)/"
+
+# Build a statically linked binary
+static-build:
+	@echo "Building static $(APP_NAME)..."
+	@mkdir -p $(BUILD_DIR)
+	CGO_ENABLED=0 GOOS=$(shell go env GOOS) GOARCH=$(shell go env GOARCH) go build -ldflags="-s -w" -a -installsuffix cgo -o $(BUILD_DIR)/$(APP_NAME) ./cmd/main.go
+	@echo "Static build complete! Executable created in $(BUILD_DIR)/"
 
 # Run the application
 run:
