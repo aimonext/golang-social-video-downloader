@@ -6,6 +6,7 @@ import (
 	"net/url"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"strings"
 )
 
@@ -133,4 +134,13 @@ func (vd *VideoDownloader) downloadFacebookVideo() error {
 }
 
 // getPlatformFromURL determines the platform from the URL host
-<diff>
+func getPlatformFromURL(host string) string {
+	switch {
+	case strings.Contains(host, "youtube.com"), strings.Contains(host, "youtu.be"):
+		return "YouTube"
+	case strings.Contains(host, "facebook.com"), strings.Contains(host, "fb.watch"):
+		return "Facebook"
+	default:
+		return ""
+	}
+}
